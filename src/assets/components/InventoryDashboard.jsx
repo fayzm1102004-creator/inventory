@@ -1,41 +1,19 @@
-import { useState, useReducer } from "react";
+import { useContext, useState } from "react";
 import Form from "./ProductForm";
 import Note from "./ProductNote";
+import { ProductContext, ProductDispatchContext,ProductsProvider } from "./ProductContext";
 import "./Dashboard.css"; // استدعاء ملف التنسيق الجديد
 
-function ProductReducer(produts, action) {
-  switch (action.type) {
-    case "deleted": {
-      return produts.filter((item) => item.id !== action.id);
-    }
-    case "added": {
-      return [...produts, action.newproduct];
-    }
-    case "increase": {
-      return produts.map((item) => {
-        if (item.id === action.id) {
-          return { ...item, price: Number(item.price) + 100 };
-        }
-        return item;
-      });
-    }
-    default: {
-      throw Error("Unknown action: " + action.type);
-    }
-  }
-}
 
-function Dashboard() {
+function DashboardContent() {
   const [store, setStore] = useState({
     name: "متجر فايز للتقنية",
     city: "قنا",
     branch: "أبوتشت",
   });
 
-  const [products, dispatch] = useReducer(ProductReducer, [
-    { id: 1, title: "Laptop Dell", price: 15000 },
-    { id: 2, title: "Wireless Mouse", price: 300 },
-  ]);
+  const products = useContext(ProductContext);
+  const dispatch = useContext(ProductDispatchContext);
   const [selectedid, setselectedid] = useState(null);
   const [operations, setOperations] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -129,7 +107,7 @@ function Dashboard() {
               placeholder="🔍 ابحث عن منتج بالاسم..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              
+
             />
 
             {products.length === 0 ? (
@@ -178,4 +156,10 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default function Dashboard(){
+  return(
+ <ProductsProvider>
+      <DashboardContent />
+    </ProductsProvider>
+  )
+}

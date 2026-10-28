@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState ,useContext} from "react";
+import{ProductContext,ProductDispatchContext} from "./ProductContext"
 
-function Form({ dispatch }) {
+function Form() {
   const [Productform, setProductform] = useState({ title: "", price: "" });
-
+const dispatch=useContext(ProductDispatchContext)
   function handleChange(e) {
     setProductform({
       ...Productform,
